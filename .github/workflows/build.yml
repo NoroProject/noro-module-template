@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  # A published release also gets the built .noromod attached to it.
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+
+      - uses: oven-sh/setup-bun@v2
+
+      # Cuts the .wasm by about a third. Always worth installing in CI: this
+      # package is the one that goes out to people.
+      - name: Install wasm-opt
+        run: |
+          curl -sSL https://github.com/WebAssembly/binaryen/releases/download/version_119/binaryen-version_119-x86_64-linux.tar.gz \
+            | tar -xz -C /tmp
+          echo "/tmp/binaryen-version_119/bin" >>"$GITHUB_PATH"
+
+      - name: Build
+        run: ./scripts/build.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: noromod
+          path: dist/*.noromod
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" dist/*.noromod --clobber
