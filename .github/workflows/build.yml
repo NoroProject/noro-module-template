@@ -30,8 +30,11 @@ jobs:
             | tar -xz -C /tmp
           echo "/tmp/binaryen-version_119/bin" >>"$GITHUB_PATH"
 
+      - name: Install cargo-noro
+        run: cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+
       - name: Build
-        run: ./scripts/build.sh
+        run: cargo noro package
 
       - uses: actions/upload-artifact@v4
         with:

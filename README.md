@@ -1,17 +1,23 @@
 # Noro module template
 
-A starting point for a [Noro](https://github.com/NoroProject/noro-shared) module. Press
-**Use this template**, clone the result, and you have a module that builds, installs and
-runs.
+A starting point for a [Noro](https://github.com/NoroProject/noro-shared) module, as a
+GitHub template: press **Use this template** and you get this repository with its CI
+already wired up.
+
+If you do not need the repository — only the module — `cargo noro new my-module` gives
+you the same files in a directory, offline, and is the shorter path.
 
 **Documentation: https://noroproject.github.io/noro-shared/**
 
 ## What you need
 
-- The Rust toolchain — `rust-toolchain.toml` here adds the wasm target for you
-- [Bun](https://bun.sh), for the mini-app
-- `zip`, and optionally [`wasm-opt`](https://github.com/WebAssembly/binaryen) (it cuts
-  the package by about a third; the build works without it)
+```bash
+cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+```
+
+Plus the Rust toolchain (`rust-toolchain.toml` here adds the wasm target for you), and
+[Bun](https://bun.sh) for the mini-app. [`wasm-opt`](https://github.com/WebAssembly/binaryen)
+is optional: it cuts the package by about a third and the build works without it.
 
 ## Make it yours
 
@@ -21,7 +27,8 @@ runs.
 
 The identifier lands in four places that have to agree — the crate name, the manifest
 `id`, the locale key prefix and the mini-app package — so it is one script rather than
-four edits.
+four edits. (`cargo noro new` does the same thing at creation time; this script exists
+because **Use this template** hands you a repository already named something else.)
 
 Pick it carefully: `id` becomes the Postgres schema `mod_<id>`, the prefix of every
 locale key you ship, the path of your endpoints, and the root of your permission nodes.
@@ -29,7 +36,7 @@ locale key you ship, the path of your endpoints, and the root of your permission
 ## Build it
 
 ```bash
-./scripts/build.sh          # → dist/my-module.noromod
+cargo noro package          # → dist/my-module.noromod
 ```
 
 Upload that file in the admin panel under **Modules**, grant what it asks for, enable it.
@@ -38,7 +45,7 @@ Nothing is recompiled and the master is not restarted.
 ## Develop it
 
 ```bash
-./scripts/dev.sh            # rebuild on every save
+cargo noro dev              # rebuild on every save
 ```
 
 Then point the master at this folder — **Modules → Dev mode**. It reads the wasm, the
@@ -53,7 +60,7 @@ src/lib.rs          your handlers — events, endpoints, settings
 ui/App.vue          the page in the panel
 ui/app.js           the mini-app entry point
 locales/{en,ru}.ftl your text, keys prefixed mod-<id>-
-scripts/            build, dev, rename
+scripts/rename.sh   renaming, for when you came via **Use this template**
 ```
 
 `src/lib.rs` ships one working example of each thing a module can do: a settings field,
