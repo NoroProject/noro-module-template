@@ -12,7 +12,7 @@ you the same files in a directory, offline, and is the shorter path.
 ## What you need
 
 ```bash
-cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+cargo install cargo-noro
 ```
 
 Plus the Rust toolchain (`rust-toolchain.toml` here adds the wasm target for you), and

@@ -31,7 +31,7 @@ jobs:
           echo "/tmp/binaryen-version_119/bin" >>"$GITHUB_PATH"
 
       - name: Install cargo-noro
-        run: cargo install --git https://github.com/NoroProject/noro-shared.git cargo-noro
+        run: cargo install cargo-noro
 
       - name: Build
         run: cargo noro package
